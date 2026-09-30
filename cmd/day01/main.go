@@ -109,12 +109,27 @@ func (d *improvedDial) turn(instruction string) {
 	d.acc += magnitude / 100
 	magnitude = magnitude % 100
 
+	if magnitude == 0 {
+		return
+	}
+
+	start := d.pos
 	d.pos = d.pos + (magnitude * direction)
 	if d.pos < 0 {
-		d.pos = d.pos + 100
-		d.acc++
+		d.pos = 100 + d.pos
 	} else if d.pos >= 100 {
 		d.pos = d.pos % 100
+	}
+	
+	if start == 0 {
+		return
+	}
+
+	if d.pos == 0 {
+		d.acc++
+	} else if direction == -1 && start < d.pos {
+		d.acc++
+	} else if direction == 1 && start > d.pos {
 		d.acc++
 	}
 
